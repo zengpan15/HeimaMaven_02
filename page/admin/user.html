@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+
+        <el-form :inline="true" :model="searchMap" class="demo-form-inline" label-width="80px" size="mini">
+            <el-form-item label="用户名">
+                <el-input v-model="searchMap.userName" placeholder="请输入用户名"></el-input>
+            </el-form-item>
+
+            <el-form-item label="活动区域">
+                <el-select v-model="searchMap.status" placeholder="用户状态">
+                    <el-option label="启用" value="1"></el-option>
+                    <el-option label="禁用" value="0"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="queryUserList">查询</el-button>
+            </el-form-item>
+
+            <el-form-item style="float: right">
+                <el-button type="primary"  size="small" @click="dialogFormVisible=true;userData={}">新增</el-button>
+            </el-form-item>
+        </el-form>
+
+        <!-- 表格 -->
+        <template>
+            <el-table
+                    :data="tableData"
+                    border
+                    style="width: 100%">
+                <el-table-column
+                        prop="email"
+                        label="邮箱"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="userName"
+                        label="用户名"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="gender"
+                        label="性别">
+                </el-table-column>
+                <el-table-column
+                        prop="deptName"
+                        label="所属部门">
+                </el-table-column>
+                <el-table-column
+                        prop="status"
+                        label="状态">
+                </el-table-column>
+                <el-table-column
+                        label="操作" width="240px">
+                    <template slot-scope="scope">
+                        <el-button type="warning" size="mini"  @click="edit(scope.row)">编辑</el-button>
+                        <el-button type="danger" size="mini" @click="del(scope.row)">删除</el-button>
+                        <el-button type="success" size="mini" @click="addRole(scope.row)">授权</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+
+        <!-- 新增和编辑对话框 -->
+        <el-dialog title="新增用户" :visible.sync="dialogFormVisible">
+            <el-form :model="userData" label-width="80px" size="mini">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="邮箱" >
+                            <el-input v-model="userData.email" autocomplete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="密码" >
+                            <el-input placeholder="请输入密码" v-model="userData.password" show-password></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="姓名" >
+                            <el-input v-model="userData.userName" autocomplete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="所在部门" >
+                            <el-select v-model="userData.deptId" placeholder="请选择所在部门">
+                                <el-option v-for="dept in deptlist"
+                                           :label="dept.deptName"
+                                           :value="dept.deptId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="性别" >
+                                <el-radio-group v-model="userData.gender">
+                                    <el-radio label="1" >男</el-radio>
+                                    <el-radio label="0" >女</el-radio>
+                                </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item  label="出生日期" >
+                            <el-date-picker
+                                    style="width:148px"
+                                    v-model="userData.birthday"
+                                    type="date"
+                                    value-format="yyyy-MM-dd"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="状态" >
+                            <el-radio-group v-model="userData.state">
+                                <el-radio label="0" >停用</el-radio>
+                                <el-radio label="1" >启用</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="电话" >
+                            <el-input v-model="userData.telephone" autocomplete="off"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+
+                <el-form-item label="入职日期" >
+                    <el-date-picker
+                            v-model="userData.joinDate"
+                            value-format="yyyy-MM-dd"
+                            type="date"
+                            placeholder="选择日期">
+                    </el-date-picker>
+                </el-form-item>
+
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addUser">确 定</el-button>
+            </div>
+        </el-dialog>
+
+        <!-- 添加角色对话框 -->
+
+        <el-dialog title="添加角色" :visible.sync="dialogFormVisibleRole">
+
+            <el-form :model="form">
+                <el-form-item label="请选择角色" >
+                    <template>
+                        <el-checkbox-group
+                                v-model="roleIds">
+                            <el-checkbox v-for="role in roles"
+                                         :label="role.roleId"
+                                         :key="role.roleId">{{role.name}}</el-checkbox>
+                        </el-checkbox-group>
+                    </template>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleRole = false">取 消</el-button>
+                <el-button type="primary" @click="addRoles()">确 定</el-button>
+            </div>
+
+
+        </el-dialog>
+
+        <!--分页-->
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="page.currentPage"
+                :page-sizes="[5, 10, 20, 40]"
+                :page-size="page.pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="page.total">
+        </el-pagination>
+    </div>
+</body>
+
+
+<script src="../../js/vue.js"></script>
+<script src="../../element-ui/lib/index.js"></script>
+<link rel="stylesheet" href="../../element-ui/lib/theme-chalk/index.css">
+<script src="../../js/axios-0.18.0.js"></script>
+
+<script>
+    //1. 创建Vue核心对象
+    new Vue({
+        el:"#app",
+        data() {
+            return {
+                userId:"",
+                roleIds:[],
+                roles:{
+
+                },
+                searchMap:{
+
+                },
+                userData:{
+
+                },
+                dialogFormVisible:false,
+                dialogFormVisibleRole:false,
+                page:{
+                    pageSize:10,
+                    total:100,
+                    currentPage:1
+                },
+                tableData: [],
+                deptlist:[]
+            }
+        },
+        methods:{
+            //添加用户对应角色
+            addRoles(){
+                this.dialogFormVisibleRole=false;
+                let data = {
+                    "userId":this.userId,
+                    "roleIds": this.roleIds
+                }
+                console.log(data);
+                axios({
+                    method:"post",
+                    url:"http://localhost:9000/user/auth",
+                    data:data
+                }).then((res)=>{
+                    console.log(res);
+                    if(res.data.flag){//成功
+                        this.$message({
+                            type: 'success',
+                            message: res.data.message
+                        });
+
+                    }else {//失败
+                        this.$message.error(res.data.message);;
+                    }
+                }).catch((error)=>{
+
+                });
+            },
+            //查询所有角色
+            queryRoles(){
+                axios({
+                    method:"get",
+                    url:"http://localhost:9000/role/listall"
+                }).then((res)=>{
+                    this.roles = res.data;
+                }).catch((error)=>{
+
+                });
+            },
+            //用户授予角色
+            addRole(row){
+                this.dialogFormVisibleRole=true;
+                this.userId = row.userId;
+
+
+
+            },
+
+            //添加或编辑用户
+            addUser(){
+                this.dialogFormVisible = false;
+                console.log(this.userData);
+                //点击确定 ，可以发送ajax请求进行删除
+                let url = "";
+				let methodType = "";
+                if(this.userData.userId){//
+                    url="http://localhost:9000/user/edit";
+					methodType="put";
+                }else {
+                    url="http://localhost:9000/user/add";
+					methodType="post";
+                }
+                axios({
+                    method: methodType,
+                    url:url,
+                    data:this.userData
+                }).then((res)=>{
+                    console.log(res);
+                    if(res.data.flag){//成功
+                        this.$message({
+                            type: 'success',
+                            message: res.data.message
+                        });
+						this.queryUserList();
+                    }else {//失败
+                        this.$message.error(res.data.message);;
+                    }
+                }).catch((error)=>{
+
+                });
+            },
+            //编辑回显用户
+            edit(row){
+                this.dialogFormVisible = true;
+                axios({
+                    method:"get",
+                    url:"http://localhost:9000/user/"+row.userId
+                }).then((res)=>{
+                    console.log(res.data);
+                    this.userData= res.data;
+                }).catch((error)=>{
+
+                });
+            },
+
+            //删除用户
+            del(row){
+                console.log(row);//row.userId
+
+                this.$confirm('您确定删除该用户吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    //点击确定 ，可以发送ajax请求进行删除
+                    axios({
+                        method:"delete",
+                        url:"http://localhost:9000/user/"+row.userId // /user/1001
+                    }).then((res)=>{
+                        console.log(res);
+                        if(res.data.flag){//删除成功
+                            this.$message({
+                                type: 'success',
+                                message: res.data.message
+                            });
+							this.queryUserList();
+                        }else {//删除失败
+                            this.$message.error(res.data.message);;
+                        }
+                    }).catch((error)=>{
+
+                    });
+
+                }).catch(() => {
+                    //点击取消
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            handleSizeChange(val) {
+                this.page.pageSize=val;
+                this.page.currentPage=1;
+                this.queryUserList();
+            },
+            handleCurrentChange(val) {
+                this.page.currentPage=val;
+                this.queryUserList();
+            },
+            //分页查询用户列表
+            queryUserList(){
+                let reqData = {
+                    "currentPage":this.page.currentPage,
+                    "pageSize":this.page.pageSize,
+                    "queryString":this.searchMap.userName,
+                    "status":this.searchMap.status
+                };
+                axios({
+                    method:"post",
+                    url:"http://localhost:9000/user/list",
+                    data:reqData
+                }).then((res)=>{
+                    console.log(res);
+                    this.tableData= res.data.rows;
+                    this.page.total = res.data.total;
+                }).catch((error)=>{
+
+                });
+            },
+            //查询所有部门
+            queryAllDept(){
+                axios({
+                    method:"get",
+                    url:"http://localhost:9000/dept/listall"
+                }).then((res)=>{
+                    console.log(res.data);
+                    this.deptlist= res.data;
+                }).catch((error)=>{
+
+                });
+            },
+        },
+        mounted(){
+            this.queryUserList();
+            this.queryAllDept();
+            this.queryRoles();
+        }
+
+    });
+</script>
+</html>

@@ -1,0 +1,77 @@
+{
+  "rows": [
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "zs@163.com",
+      "username": "张三",
+      "gender": "男",
+      "deptName": "集团总部",
+      "status": "启用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "lisi@163.com",
+      "username": "李四",
+      "gender": "男",
+      "deptName": "集团总部",
+      "status": "禁用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "王五@itcast.cn",
+      "username": "王五",
+      "gender": "女",
+      "deptName": "南京校区",
+      "status": "启用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "zs@163.com",
+      "username": "张三",
+      "gender": "男",
+      "deptName": "集团总部",
+      "status": "启用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "lisi@163.com",
+      "username": "李四",
+      "gender": "男",
+      "deptName": "集团总部",
+      "status": "禁用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "王五@itcast.cn",
+      "username": "王五",
+      "gender": "女",
+      "deptName": "南京校区",
+      "status": "启用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "zs@163.com",
+      "username": "张三",
+      "gender": "男",
+      "deptName": "集团总部",
+      "status": "启用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "lisi@163.com",
+      "username": "李四",
+      "gender": "男",
+      "deptName": "集团总部",
+      "status": "禁用"
+    },
+    {
+      "userId": "c4191603-c4b2-40dd-a03f-256cb3bd8844",
+      "email": "王五@itcast.cn",
+      "username": "王五",
+      "gender": "女",
+      "deptName": "南京校区",
+      "status": "启用"
+    }
+  ],
+  "total": 87
+}

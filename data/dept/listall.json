@@ -1,0 +1,26 @@
+[
+  {
+    "deptId": "100101",
+    "deptName": "南京研究院",
+    "parentName": "总部研究院",
+    "state": "使用中"
+  },
+  {
+    "deptId": "100102",
+    "deptName": "南京研究院",
+    "parentName": "总部研究院",
+    "state": "使用中"
+  },
+  {
+    "deptId": "100103",
+    "deptName": "南京研究院",
+    "parentName": "总部研究院",
+    "state": "使用中"
+  },
+  {
+    "deptId": "100104",
+    "deptName": "南京研究院",
+    "parentName": "总部研究院",
+    "state": "使用中"
+  }
+]
